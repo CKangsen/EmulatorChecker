@@ -31,9 +31,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
-    //compile project(':antifake')
+    compile project(':antifake')
     //compile(name: 'antifake-debug', ext: 'aar')
-    compile(name: 'antifake-release', ext: 'aar')
     //compile files('libs/EmulatorCheckerSdk.jar')
 
     //compile 'com.squareup.leakcanary:leakcanary-android:1.5.4'

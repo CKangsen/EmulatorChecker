@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.threetree.EmulatorCheckerSdk;
+
 //import com.squareup.leakcanary.LeakCanary;
-import com.transsnet.EmulatorCheckerSdk;
 
 public class MainActivity extends AppCompatActivity {
 

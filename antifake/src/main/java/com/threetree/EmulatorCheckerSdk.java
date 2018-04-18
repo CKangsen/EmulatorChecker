@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
@@ -29,6 +30,7 @@ public final class EmulatorCheckerSdk {
     private static boolean BinderCheckResult = false;
     private static boolean SensorCheckResult = false;
     private static boolean IsPhoneCheckResult = false;
+    private static boolean BuildModelCheckResult = false;
 
 
     public static synchronized void checkIsEmulator(Context context, CheckerCallback checkerCallback){
@@ -38,6 +40,7 @@ public final class EmulatorCheckerSdk {
         EmuCheckUtilResult = EmuCheckUtil.mayOnEmulator(mContext);
         SensorCheckResult = sensorCheck(mContext);
         IsPhoneCheckResult = !isPhone(mContext);
+        BuildModelCheckResult = checkBuildModelResult();
 
         Intent intent = new Intent(mContext, EmulatorCheckService.class);
         mContext.bindService(intent, serviceConnection, Service.BIND_AUTO_CREATE);
@@ -95,9 +98,25 @@ public final class EmulatorCheckerSdk {
 
     private static boolean checkResult(){
         if (SensorCheckResult) {
-            return ((EmuCheckUtilResult || BinderCheckResult || IsPhoneCheckResult) && SensorCheckResult);
+            return ((EmuCheckUtilResult || BinderCheckResult || IsPhoneCheckResult || BuildModelCheckResult) && SensorCheckResult);
         } else {
-            return ((EmuCheckUtilResult || BinderCheckResult || IsPhoneCheckResult) || SensorCheckResult);
+            return ((EmuCheckUtilResult || BinderCheckResult || IsPhoneCheckResult || BuildModelCheckResult) || SensorCheckResult);
+        }
+    }
+
+
+    /**
+     * 判断设备是否是模拟器
+     *
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    private static boolean checkBuildModelResult() {
+        // model:Android SDK built for x86
+        //只要是在模拟器中，不管是什么版本的模拟器，在它的MODEL信息里就会带有关键字参数sdk
+        if (Build.MODEL.contains("sdk") || Build.MODEL.contains("SDK")) {
+            return true;
+        } else {
+            return false;
         }
     }
 
